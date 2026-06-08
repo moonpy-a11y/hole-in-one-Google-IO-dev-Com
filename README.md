@@ -6,7 +6,7 @@
 
 ---
 
-## 🎮 Welcome to Hole in One!
+## Welcome to Hole in One!
 
 Welcome, developers! 👋 You've just discovered the most fun way to get pumped up for **Google I/O 2026**. This isn't just another boring marketing package—it's a fully interactive gaming experience built *by developers, for developers*.
 
