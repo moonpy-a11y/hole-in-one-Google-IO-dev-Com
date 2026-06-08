@@ -1,20 +1,25 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+  <a href="https://github.com/moonpy-a11y/hole-in-one-Google-IO-dev-Com">
+    <img src="https://readme-typing-svg.herokuapp.com/?font=Fira+Code&weight=800&size=40&pause=1000&color=0F9D58&center=true&vCenter=true&width=800&lines=%E2%9B%B3+Hole+in+One+-+Google+I%2FO;Dev+Community+Repository;Welcome+Developers!" alt="Typing SVG" />
+  </a>
 </div>
 
-# Run and deploy your AI Studio app
+---
 
-This contains everything you need to run your app locally.
+This guide provides the essential Git workflows needed to contribute to this project. Click on the sections below to expand and view the step-by-step instructions.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1afPomOHQITfHGQBRMyo1AhFRnur14lt0
+<details>
+<summary><b><kbd>🔐 1. How to Log In & Authenticate</kbd></b></summary>
+<br>
 
-## Run Locally
+Before you can push changes, your environment needs to be authenticated with GitHub. The most efficient way to do this is using the [GitHub CLI](https://cli.github.com/).
 
-**Prerequisites:**  Node.js
+```bash
+# 1. Initiate the login process
+gh auth login
 
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+# 2. Follow the on-screen prompts:
+# - What account do you want to log into? GitHub.com
+# - What is your preferred protocol for Git operations? HTTPS
+# - Authenticate Git with your GitHub credentials? Yes
+# - How would you like to authenticate? Login with a web browser
