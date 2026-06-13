@@ -13,12 +13,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.io.holeInOne.data.GameState
 import com.google.io.holeInOne.viewmodel.GameViewModel
 
 @Composable
 fun GameScreen(
-    viewModel: GameViewModel = remember { GameViewModel() }
+    viewModel: GameViewModel = viewModel()
 ) {
     val gameState by viewModel.gameState.collectAsState()
     
@@ -41,23 +42,30 @@ fun GameScreen(
             onStroke = { viewModel.handleStroke() }
         )
         
-        // HUD Overlay
-        GameHUD(
+        // HUD and Commentary at Bottom
+        Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(16.dp),
-            gameState = gameState,
-            onRetry = { viewModel.retryLevel() },
-            onNext = { viewModel.nextLevel() },
-            onReset = { viewModel.resetGame() }
-        )
-        
-        // Caddy Commentary
-        if (gameState.lastCommentary != null) {
-            CaddyCommentary(
-                modifier = Modifier.align(Alignment.BottomCenter),
-                commentary = gameState.lastCommentary,
-                isLoading = gameState.commentaryLoading
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            // Caddy Commentary
+            if (gameState.lastCommentary != null) {
+                CaddyCommentary(
+                    modifier = Modifier.fillMaxWidth(),
+                    commentary = gameState.lastCommentary,
+                    isLoading = gameState.commentaryLoading
+                )
+            }
+            
+            // HUD Overlay
+            GameHUD(
+                modifier = Modifier.fillMaxWidth(),
+                gameState = gameState,
+                onRetry = { viewModel.retryLevel() },
+                onNext = { viewModel.nextLevel() },
+                onReset = { viewModel.resetGame() }
             )
         }
     }

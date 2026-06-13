@@ -8,7 +8,18 @@ class GeminiService {
         apiKey = "" // Add your API key here
     )
     
+    // In-memory cache for commentary responses
+    private val commentaryCache = mutableMapOf<String, String>()
+    
     suspend fun generateCommentary(levelName: String, strokes: Int): String {
+        // Create cache key based on level and strokes
+        val cacheKey = "${levelName}_${strokes}"
+        
+        // Check if response is already cached
+        commentaryCache[cacheKey]?.let { cachedResponse ->
+            return cachedResponse
+        }
+        
         val prompt = """
             You are a professional golf caddy providing brief, encouraging commentary.
             The player just took $strokes strokes on $levelName.
@@ -18,7 +29,12 @@ class GeminiService {
         
         return try {
             val response = model.generateContent(prompt)
-            response.text ?: "Nice shot!"
+            val commentary = response.text ?: "Nice shot!"
+            
+            // Cache the response
+            commentaryCache[cacheKey] = commentary
+            
+            commentary
         } catch (e: Exception) {
             "Good effort!"
         }
