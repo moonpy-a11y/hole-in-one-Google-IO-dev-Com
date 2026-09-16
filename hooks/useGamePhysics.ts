@@ -242,10 +242,10 @@ export function useGamePhysics(
         let collided = false;
         for (let i = 0; i < SUBSTEPS; i++) {
             b.pos.x += b.vel.x / SUBSTEPS; b.pos.y += b.vel.y / SUBSTEPS;
-            if (b.pos.x - b.radius < 0) { b.pos.x = b.radius; b.vel.x = -b.vel.x * 0.8; playForeground(getPath("/media/audio/sfx/minigolf/hitwall.mp3")); }
-            else if (b.pos.x + b.radius > gridWidth) { b.pos.x = gridWidth - b.radius; b.vel.x = -b.vel.x * 0.8; playForeground(getPath("/media/audio/sfx/minigolf/hitwall.mp3")); }
-            if (b.pos.y - b.radius < 0) { b.pos.y = b.radius; b.vel.y = -b.vel.y * 0.8; playForeground(getPath("/media/audio/sfx/minigolf/hitwall.mp3")); }
-            else if (b.pos.y + b.radius > gridHeight) { b.pos.y = gridHeight - b.radius; b.vel.y = -b.vel.y * 0.8; playForeground(getPath("/media/audio/sfx/minigolf/hitwall.mp3")); }
+            if (b.pos.x - b.radius < 0) { b.pos.x = b.radius; b.vel.x = -b.vel.x * 0.85; playForeground(getPath("/media/audio/sfx/minigolf/hitwall.mp3")); }
+            else if (b.pos.x + b.radius > gridWidth) { b.pos.x = gridWidth - b.radius; b.vel.x = -b.vel.x * 0.85; playForeground(getPath("/media/audio/sfx/minigolf/hitwall.mp3")); }
+            if (b.pos.y - b.radius < 0) { b.pos.y = b.radius; b.vel.y = -b.vel.y * 0.85; playForeground(getPath("/media/audio/sfx/minigolf/hitwall.mp3")); }
+            else if (b.pos.y + b.radius > gridHeight) { b.pos.y = gridHeight - b.radius; b.vel.y = -b.vel.y * 0.85; playForeground(getPath("/media/audio/sfx/minigolf/hitwall.mp3")); }
 
             const speed = Math.sqrt(b.vel.x * b.vel.x + b.vel.y * b.vel.y);
             sandTilesRef.current.forEach(t => { if (b.pos.x >= t.x && b.pos.x <= t.x + TILE_SIZE && b.pos.y >= t.y && b.pos.y <= t.y + TILE_SIZE) appliedFriction = SAND_FRICTION; });
@@ -267,11 +267,11 @@ export function useGamePhysics(
             }
             if (b.teleportTimer > 0) break;
 
-            const SINK_THRESHOLD = 6.0;
+            const SINK_THRESHOLD = 5.0;
             waterTilesRef.current.forEach(t => { if (b.pos.x >= t.x && b.pos.x <= t.x + TILE_SIZE && b.pos.y >= t.y && b.pos.y <= t.y + TILE_SIZE && speed < SINK_THRESHOLD) { b.pos.x = startPosRef.current!.x; b.pos.y = startPosRef.current!.y; b.vel.x = 0; b.vel.y = 0; b.isMoving = false; onStroke(); } });
             waterArcsRef.current.forEach(t => { if (isPointInArc(b.pos.x, b.pos.y, t.x, t.y, TILE_SIZE, t.orientation).inBounds && speed < SINK_THRESHOLD) { b.pos.x = startPosRef.current!.x; b.pos.y = startPosRef.current!.y; b.vel.x = 0; b.vel.y = 0; b.isMoving = false; onStroke(); } });
 
-            boostTilesRef.current.forEach(t => { if (b.pos.x >= t.x && b.pos.x <= t.x + TILE_SIZE && b.pos.y >= t.y && b.pos.y <= t.y + TILE_SIZE) { b.vel.x += t.dx * 0.4; b.vel.y += t.dy * 0.4; const speedSq = b.vel.x**2 + b.vel.y**2; if (speedSq > 30 * 30) { const sp = Math.sqrt(speedSq); b.vel.x = (b.vel.x / sp) * 30; b.vel.y = (b.vel.y / sp) * 30; } b.isMoving = true; } });
+            boostTilesRef.current.forEach(t => { if (b.pos.x >= t.x && b.pos.x <= t.x + TILE_SIZE && b.pos.y >= t.y && b.pos.y <= t.y + TILE_SIZE) { b.vel.x += t.dx * 0.5; b.vel.y += t.dy * 0.5; const speedSq = b.vel.x**2 + b.vel.y**2; if (speedSq > 30 * 30) { const sp = Math.sqrt(speedSq); b.vel.x = (b.vel.x / sp) * 30; b.vel.y = (b.vel.y / sp) * 30; } b.isMoving = true; } });
 
             wallsRef.current.forEach(w => {
                 if (w.type === 'SQUARE' && !collided) {
@@ -281,7 +281,7 @@ export function useGamePhysics(
                       b.pos.x += normalX * (b.radius - dist); b.pos.y += normalY * (b.radius - dist);
                       playForeground(getPath("/media/audio/sfx/minigolf/hitwall.mp3"));
                       collided = true;
-                      if (Math.abs(b.pos.x - closestX) > Math.abs(b.pos.y - closestY)) b.vel.x = -b.vel.x * 0.8; else b.vel.y = -b.vel.y * 0.8;
+                      if (Math.abs(b.pos.x - closestX) > Math.abs(b.pos.y - closestY)) b.vel.x = -b.vel.x * 0.85; else b.vel.y = -b.vel.y * 0.85;
                   }
                 } else if (w.type === 'ARC' || w.type === 'INSIDE_ARC') {
                   const { inBounds, cx, cy } = isPointInArc(b.pos.x, b.pos.y, w.x, w.y, TILE_SIZE, w.orientation!);
@@ -291,13 +291,13 @@ export function useGamePhysics(
                         b.pos.x += normalX * overlap; b.pos.y += normalY * overlap;
                         const dot = b.vel.x * normalX + b.vel.y * normalY;
                         playForeground(getPath("/media/audio/sfx/minigolf/hitwall.mp3"));
-                        b.vel.x = (b.vel.x - 2 * dot * normalX) * 0.8; b.vel.y = (b.vel.y - 2 * dot * normalY) * 0.8;
+                        b.vel.x = (b.vel.x - 2 * dot * normalX) * 0.85; b.vel.y = (b.vel.y - 2 * dot * normalY) * 0.85;
                   } else if (w.type === 'INSIDE_ARC' && dist > radius - b.radius && inBounds) {
                         const normalX = -dx / dist, normalY = -dy / dist, overlap = dist - (radius - b.radius);
                         b.pos.x += normalX * overlap; b.pos.y += normalY * overlap;
                         const dot = b.vel.x * normalX + b.vel.y * normalY;
                         playForeground(getPath("/media/audio/sfx/minigolf/hitwall.mp3"));
-                        b.vel.x = (b.vel.x - 2 * dot * normalX) * 0.8; b.vel.y = (b.vel.y - 2 * dot * normalY) * 0.8;
+                        b.vel.x = (b.vel.x - 2 * dot * normalX) * 0.85; b.vel.y = (b.vel.y - 2 * dot * normalY) * 0.85;
                   }
                 }
             });
